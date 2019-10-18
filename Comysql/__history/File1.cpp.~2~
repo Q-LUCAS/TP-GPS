@@ -1,0 +1,45 @@
+#pragma hdrstop
+#pragma argsused
+
+#ifdef _WIN32
+#include <tchar.h>
+#else
+  typedef char _TCHAR;
+  #define _tmain main
+#endif
+#include "mysql.h"
+#include <stdio.h>
+
+ int _tmain(int argc, _TCHAR* argv[]) 
+{
+	MYSQL *mySQL;
+	mySQL = mysql_init(NULL);
+    MYSQL_ROW myROW;
+	MYSQL_RES *myRES;
+	AnsiString aStr;
+	myRES = mysql_list_tables(mySQL, NULL);
+
+	if (!mysql_real_connect(mySQL, "127.0.0.1", "root", "root", "TESTBDDCPP", 0, NULL, 0))
+	{
+		// la connection a échoué
+	} else
+	{
+		// la connection a réussi
+	}
+
+	if (myRES)
+	{
+		for (unsigned int i = 0; i < myRES->row_count; i++)
+		{
+			myROW = mysql_fetch_row(myRES);
+
+			for (unsigned int j = 0; j < mysql_num_fields(myRES); j++)
+			{
+				aStr.sprintf("%s", myROW[j]);
+				ListBox1->Items->Add(aStr);
+			}
+		}
+		mysql_free_result(myRES);
+	}
+	return 0;
+}
